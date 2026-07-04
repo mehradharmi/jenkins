@@ -5,7 +5,7 @@ pipeline {
     stages {
         stage("Code") {
             echo "This clone code from github"
-            git url: 
+            git url: git@github.com:mehradharmi/jenkins.git, branch: 'main'
         }
 
         stage('Build') {
