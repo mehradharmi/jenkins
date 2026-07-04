@@ -6,7 +6,7 @@ pipeline {
         stage("Code") {
             steps {
             echo "This clone code from github"
-            git url: git@github.com:mehradharmi/jenkins.git, branch: 'main'
+            git url: "git@github.com:mehradharmi/jenkins.git", branch: "main"
             }
         }
 
@@ -19,13 +19,13 @@ pipeline {
         stage("Cleanup") {
             steps {
             echo "This is cleanup stage"
-            sh "docker rmi simple-app"
+            sh "docker rm -f simple-app || true"
             }
         }
         stage("Deploy") {
             steps {
             echo "This is deploy stage"
-            sh "docker run -d -p 8080:8080 simple-app"
+            sh "docker run -d --name simple-app -p 8080:80 simple-app"
             }
         }
         stage("verify") {
