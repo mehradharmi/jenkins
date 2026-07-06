@@ -1,39 +1,34 @@
+@Library("shared") _
 pipeline {
     agent { label 'vinod' }
     
     stages {
+        stage("Hello"){
+        steps{
+            script{
+                hello()            }
+        }
+    }
         stage("Code") {
             steps {
-                echo "Cloning code from GitHub..."
-                git url: "https://github.com/mehradharmi/jenkins.git", branch: "master"
+                script{
+                clone("https://github.com/mehradharmi/jenkins.git","master")
+                }
             }
         }
         
         stage('Build') {
             steps {
-                echo "Building local Docker image..."
-                sh "docker build -t simple-app ."
+                script{
+                docker_build("simple-app","latest","mehradharmi1")
+                }
             }
         }
         
         stage('Push to Docker Hub') {
-            steps { // FIX 1: Steps block add kiya
-                echo "Logging into Docker Hub and pushing image..."
-                
-                // FIX 2: usernamePassword ka syntax sahi kiya
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'dockerHubCred', 
-                        passwordVariable: 'dockerHubPass', 
-                        usernameVariable: 'dockerHubUser'
-                    )
-                ]) {
-                    // FIX 3: Password secure karne ke liye \$ lagaya aur --password-stdin use kiya
-                    sh """
-                        echo "\$dockerHubPass" | docker login -u "\$dockerHubUser" --password-stdin
-                        docker tag simple-app "\$dockerHubUser/simple-app:latest"
-                        docker push "\$dockerHubUser/simple-app:latest"
-                    """
+            steps { 
+                script{
+                    docker_push("simple-app","latest","mehradharmi1")
                 }
             }
         }
