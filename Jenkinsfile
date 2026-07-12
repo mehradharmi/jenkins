@@ -12,7 +12,7 @@ pipeline {
         stage("Code") {
             steps {
                 script{
-                clone("https://github.com/mehradharmi/jenkins.git","master")
+                gitClone("https://github.com/mehradharmi/jenkins.git","master")
                 }
             }
         }
